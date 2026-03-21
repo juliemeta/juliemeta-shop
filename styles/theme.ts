@@ -1,18 +1,35 @@
 import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          margin: 0,
+        },
+      },
+    },
+  },
+
   palette: {
     background: {
-      default: "#f8f7f5",
+      default: "#fffefd",
       paper: "#ffffff",
       subtle: "#f2f0ec",
       section: "#ece9e4",
       elevated: "#ffffff",
     },
+    primary: {
+      main: "#000000",
+      dark: "#000",
+      light: "#fff",
+      contrastText: "#fff",
+    },
     secondary: {
       main: "#D4A373",
       dark: "#000",
       light: "#fff",
+      contrastText: "#fff",
     },
     error: {
       main: "#d32f2f",
@@ -37,13 +54,71 @@ export const theme = createTheme({
   },
 
   typography: {
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "var(--font-inter), sans-serif",
     h1: {
+      fontFamily: "var(--font-playfair), serif",
+      fontSize: "2.5rem",
+      fontWeight: 600,
+      lineHeight: 1.2,
+      color: "#4800a7",
+      textAlign: "center",
+    },
+
+    h2: {
+      fontFamily: "var(--font-playfair), serif",
       fontSize: "2rem",
       fontWeight: 600,
+      lineHeight: 1.25,
+      color: "#d18bff",
+      textAlign: "center",
     },
-    h6: {
+
+    h3: {
+      fontFamily: "var(--font-playfair), serif",
+      fontSize: "1.75rem",
       fontWeight: 500,
+      lineHeight: 1.3,
+      color: "#6500a8",
+      textAlign: "center",
+    },
+
+    h4: {
+      fontFamily: "var(--font-playfair), serif",
+      fontSize: "1.5rem",
+      fontWeight: 500,
+      lineHeight: 1.35,
+      color: "#004b16",
+      textAlign: "center",
+    },
+
+    h5: {
+      fontFamily: "var(--font-playfair), serif",
+      fontSize: "1.25rem",
+      fontWeight: 500,
+      lineHeight: 1.4,
+      color: "#2370ff",
+      textAlign: "center",
+    },
+
+    h6: {
+      fontFamily: "var(--font-playfair), serif",
+      fontSize: "1.125rem",
+      fontWeight: 500,
+      lineHeight: 1.4,
+      color: "#020202",
+      textAlign: "center",
+    },
+
+    body1: {
+      fontSize: "1rem",
+      fontWeight: 400,
+      lineHeight: 1.6,
+    },
+
+    body2: {
+      fontSize: "0.875rem",
+      fontWeight: 400,
+      lineHeight: 1.6,
     },
   },
 
