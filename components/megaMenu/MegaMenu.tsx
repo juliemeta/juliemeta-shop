@@ -20,7 +20,10 @@ type Category = {
 export default function MegaMenu({ categories }: { categories: Category[] }) {
   const [open, setOpen] = useState(false);
 
-  const topCategories = categories.filter((cat) => cat.parent === 0);
+  const parentCategories = categories.filter((cat) => cat.parent === 0);
+
+  const getChildren = (parentId: number) =>
+    categories.filter((cat) => cat.parent === parentId);
 
   return (
     <MegaMenuWrapper
@@ -31,17 +34,21 @@ export default function MegaMenu({ categories }: { categories: Category[] }) {
 
       {open && (
         <MegaMenuDropdown>
-          <MegaMenuColumn>
-            <NavLinkTypography variant="subtitle2">
-              Categories
-            </NavLinkTypography>
-
-            {topCategories.map((cat) => (
-              <StyledLink key={cat.id} href={`/products?category=${cat.id}`}>
-                {cat.name}
+          {parentCategories.map((parent) => (
+            <MegaMenuColumn key={parent.id}>
+              <StyledLink href={`/products/${parent.slug}`}>
+                <NavLinkTypography variant="subtitle2">
+                  {parent.name}
+                </NavLinkTypography>
               </StyledLink>
-            ))}
-          </MegaMenuColumn>
+
+              {getChildren(parent.id).map((child) => (
+                <StyledLink key={child.id} href={`/products/${child.slug}`}>
+                  {child.name}
+                </StyledLink>
+              ))}
+            </MegaMenuColumn>
+          ))}
 
           <MegaMenuRow>
             <StyledLink href="/products">Se alt! 💥</StyledLink>

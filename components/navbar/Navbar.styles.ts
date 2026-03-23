@@ -4,7 +4,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
-import { Typography, Link } from "@mui/material";
+import { Typography } from "@mui/material";
+import Link from "next/link";
 
 export const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -48,6 +49,7 @@ export const NavLinks = styled(Box)(({ theme }) => ({
 export const StyledLink = styled(Link)({
   textDecoration: "none",
   color: "inherit",
+  display: "inline-block",
 });
 
 export const NavLinkTypography = styled(Typography)({
@@ -55,7 +57,7 @@ export const NavLinkTypography = styled(Typography)({
   cursor: "pointer",
   "&:hover": {
     opacity: 0.7,
-    TextDecoration: "underline",
+    textDecoration: "underline",
   },
 });
 

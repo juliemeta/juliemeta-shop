@@ -1,42 +1,52 @@
-//--- Products ---//
-export async function getProducts(category?: string, search?: string) {
-  let url = `${process.env.NEXT_PUBLIC_WC_URL}/wp-json/wc/v3/products`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_WC_URL}/wp-json/wc/v3`;
 
+function getAuthParams() {
   const params = new URLSearchParams();
-
-  // 🔑 credentials (always)
   params.append("consumer_key", process.env.WC_CONSUMER_KEY!);
   params.append("consumer_secret", process.env.WC_CONSUMER_SECRET!);
+  return params;
+}
 
-  // 🏷️ category (ID)
-  if (category) {
-    params.append("category", category);
-  }
+// --- Categories (cached) ---
+export async function getCategories() {
+  const params = getAuthParams();
 
-  // 🔍 search
-  if (search) {
-    params.append("search", search);
-  }
-
-  url += `?${params.toString()}`;
-
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/products/categories?${params}`, {
+    next: { revalidate: 60 * 60 }, // 🔥 cache 1 time
+  });
 
   return res.json();
 }
 
-//--- Categories ---//
-export async function getCategories() {
-  let url = `${process.env.NEXT_PUBLIC_WC_URL}/wp-json/wc/v3/products/categories`;
+async function getCategoryIdFromSlug(slug: string) {
+  const categories = await getCategories();
 
-  const params = new URLSearchParams();
+  const match = categories.find((cat: any) => cat.slug === slug);
 
-  params.append("consumer_key", process.env.WC_CONSUMER_KEY!);
-  params.append("consumer_secret", process.env.WC_CONSUMER_SECRET!);
+  return match?.id;
+}
 
-  url += `?${params.toString()}`;
+// --- Products ---
+export async function getProducts(category?: string, search?: string) {
+  const params = getAuthParams();
 
-  const res = await fetch(url, { cache: "no-store" });
+  if (category) {
+    const categoryId = isNaN(Number(category))
+      ? await getCategoryIdFromSlug(category)
+      : category;
+
+    if (categoryId) {
+      params.append("category", String(categoryId));
+    }
+  }
+
+  if (search) {
+    params.append("search", search);
+  }
+
+  const res = await fetch(`${BASE_URL}/products?${params}`, {
+    cache: "no-store", // altid friske produkter
+  });
 
   return res.json();
 }

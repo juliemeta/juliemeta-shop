@@ -17,10 +17,22 @@ import {
 import Image from "next/image";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import MegaMenu from "../megaMenu/MegaMenu";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar({ categories }: any) {
   const cartCount = 2; // placeholder (state coming soon)
 
+  const [search, setSearch] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!search.trim()) return;
+
+    router.push(`/products?search=${search}`);
+  };
   return (
     <StyledAppBar position="sticky">
       <StyledToolbar>
@@ -40,7 +52,22 @@ export default function Navbar({ categories }: any) {
         </LeftSection>
 
         {/* CENTER (search) */}
-        <CenterSection></CenterSection>
+        <CenterSection>
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Søg produkter..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                padding: "6px 12px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                outline: "none",
+              }}
+            />
+          </form>
+        </CenterSection>
 
         {/* RIGHT */}
         <RightSection>
