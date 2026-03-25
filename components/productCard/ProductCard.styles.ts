@@ -18,7 +18,8 @@ export const StyledCard = styled(Card)(({ theme }) => ({
 
 export const ImageWrapper = styled(Box)({
   position: "relative",
-  height: 300,
+  width: "100%",
+  aspectRatio: "1 / 1",
   overflow: "hidden",
 });
 

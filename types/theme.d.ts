@@ -5,5 +5,6 @@ declare module "@mui/material/styles" {
     subtle: string;
     section: string;
     elevated: string;
+    navbar: string;
   }
 }
