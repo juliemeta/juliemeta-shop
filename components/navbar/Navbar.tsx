@@ -20,6 +20,7 @@ import MegaMenu from "../megaMenu/MegaMenu";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Fuse from "fuse.js";
+import { useCartStore } from "@/lib/store/cartStore";
 
 // highlight helper
 function highlight(text: string, query: string) {
@@ -40,7 +41,9 @@ function highlight(text: string, query: string) {
 }
 
 export default function Navbar({ categories }: any) {
-  const cartCount = 2;
+  const cartCount = useCartStore((state) =>
+    state.items.reduce((sum, item) => sum + item.quantity, 0),
+  );
 
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<any[]>([]);

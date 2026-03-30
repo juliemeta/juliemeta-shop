@@ -14,11 +14,13 @@ import {
 import { useState } from "react";
 import Image from "next/image";
 import placeholderImage from "../../public/assets/images/placeholder.png";
+import { useCartStore } from "@/lib/store/cartStore";
 
 export function SingleProductView({ product }: any) {
   const [selectedImage, setSelectedImage] = useState(product.images?.[0]?.src);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState(0);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   return (
     <Box sx={{ maxWidth: 1200, mx: "auto", p: 3 }}>
@@ -98,6 +100,16 @@ export function SingleProductView({ product }: any) {
               "&:hover": { backgroundColor: "#b38cc9" },
             }}
             fullWidth
+            onClick={() =>
+              addToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.images?.[0]?.src,
+                quantity: qty,
+                slug: product.slug,
+              })
+            }
           >
             Tilføj til kurv
           </Button>
@@ -134,7 +146,7 @@ export function SingleProductView({ product }: any) {
 
           {tab === 1 && (
             <Typography>
-              (Her kan du mappe attributes fra WooCommerce)
+              (Insert here: Mapping of WooCommerce attributes)
             </Typography>
           )}
 
