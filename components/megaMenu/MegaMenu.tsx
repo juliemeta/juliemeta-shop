@@ -53,14 +53,19 @@ export default function MegaMenu({ categories }: { categories: Category[] }) {
         <MegaMenuDropdown>
           {parentCategories.map((parent) => (
             <MegaMenuColumn key={parent.id}>
-              <StyledLink href={`/products/${parent.slug}`}>
+              {/* PARENT CATEGORY */}
+              <StyledLink href={`/shop/category/${parent.slug}`}>
                 <NavLinkTypography variant="subtitle2">
                   {parent.name}
                 </NavLinkTypography>
               </StyledLink>
 
+              {/* CHILD CATEGORIES */}
               {getChildren(parent.id).map((child) => (
-                <StyledLink key={child.id} href={`/products/${child.slug}`}>
+                <StyledLink
+                  key={child.id}
+                  href={`/shop/category/${child.slug}`}
+                >
                   {child.name}
                 </StyledLink>
               ))}
@@ -68,7 +73,7 @@ export default function MegaMenu({ categories }: { categories: Category[] }) {
           ))}
 
           <MegaMenuRow>
-            <StyledLink href="/products">Se alt! 💥</StyledLink>
+            <StyledLink href="/shop">Se alt! 💥</StyledLink>
           </MegaMenuRow>
         </MegaMenuDropdown>
       )}

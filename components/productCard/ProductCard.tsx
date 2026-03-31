@@ -14,6 +14,7 @@ import {
 type Product = {
   id: number;
   name: string;
+  slug: string;
   price: string;
   images: { src: string }[];
 };
@@ -23,7 +24,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const secondImage = product.images[1]?.src;
 
   return (
-    <Link href={`/product/${product.id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/shop/${product.slug}`} style={{ textDecoration: "none" }}>
       <StyledCard>
         <ImageWrapper>
           <BaseImage src={firstImage} alt={product.name} />

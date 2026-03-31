@@ -1,9 +1,8 @@
-import Navbar from "@/components/navbar/Navbar";
-import { theme } from "@/styles/theme";
+import Navbar from "@/components/navbar/NavbarWrapper";
 import { Playfair_Display, Inter } from "next/font/google";
 import { Box } from "@mui/material";
 import { getCategories } from "@/lib/woocommerce";
-import Providers from "@/components/Providers";
+import ThemeRegistry from "./themeRegistry";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -26,20 +25,21 @@ export default async function RootLayout({
   return (
     <html lang="da">
       <body className={`${inter.variable} ${playfair.variable}`}>
-        <Providers>
+        <ThemeRegistry>
           <Navbar categories={categories} />
-          <Box sx={{ background: theme.palette.background.default }}>
+
+          <Box sx={{ background: "background.default" }}>
             <Box
               sx={{
                 maxWidth: 1200,
                 margin: "0 auto",
-                padding: theme.spacing(5),
+                padding: 5,
               }}
             >
               {children}
             </Box>
           </Box>
-        </Providers>
+        </ThemeRegistry>
       </body>
     </html>
   );

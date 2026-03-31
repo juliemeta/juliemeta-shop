@@ -20,6 +20,7 @@ import MegaMenu from "../megaMenu/MegaMenu";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Fuse from "fuse.js";
+import { useCartStore } from "@/lib/store/cartStore";
 
 // highlight helper
 function highlight(text: string, query: string) {
@@ -40,7 +41,9 @@ function highlight(text: string, query: string) {
 }
 
 export default function Navbar({ categories }: any) {
-  const cartCount = 2;
+  const cartCount = useCartStore((state) =>
+    state.items.reduce((sum, item) => sum + item.quantity, 0),
+  );
 
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<any[]>([]);
@@ -181,8 +184,8 @@ export default function Navbar({ categories }: any) {
 
                       const url =
                         item.type === "product"
-                          ? `/product/${item.slug}`
-                          : `/products/${item.slug}`;
+                          ? `/shop/${item.slug}`
+                          : `/shop/category/${item.slug}`;
 
                       router.push(url);
                       setOpenResults(false);
@@ -240,7 +243,7 @@ export default function Navbar({ categories }: any) {
                   >
                     {item.type === "product" ? (
                       <StyledLink
-                        href={`/product/${item.slug}`}
+                        href={`/shop/${item.slug}`}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -272,7 +275,7 @@ export default function Navbar({ categories }: any) {
                         </div>
                       </StyledLink>
                     ) : (
-                      <StyledLink href={`/products/${item.slug}`}>
+                      <StyledLink href={`/shop/category/${item.slug}`}>
                         Vis kategori: "{highlight(item.name, search)}"
                       </StyledLink>
                     )}

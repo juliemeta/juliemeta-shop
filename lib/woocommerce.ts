@@ -1,34 +1,68 @@
 const BASE_URL = `${process.env.NEXT_PUBLIC_WC_URL}/wp-json/wc/v3`;
 
-function getAuthParams() {
-  const params = new URLSearchParams();
-  params.append("consumer_key", process.env.WC_CONSUMER_KEY!);
-  params.append("consumer_secret", process.env.WC_CONSUMER_SECRET!);
-  return params;
+// 🔐 Central auth header
+function getAuthHeaders() {
+  return {
+    Authorization:
+      "Basic " +
+      Buffer.from(
+        `${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`,
+      ).toString("base64"),
+  };
+}
+
+// 🛡️ Safe fetch (undgår HTML crash)
+async function safeFetch(url: string, options: any = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...getAuthHeaders(),
+      ...(options.headers || {}),
+    },
+  });
+
+  const text = await res.text();
+
+  // Debug (kan fjernes senere)
+  console.log("API RAW:", url, text);
+
+  if (!res.ok) {
+    throw new Error("WooCommerce API fejl");
+  }
+
+  if (text.startsWith("<")) {
+    console.error("FULL HTML RESPONSE:\n", text);
+    return []; // 🔥 midlertidigt så app ikke crasher
+  }
+
+  return JSON.parse(text);
 }
 
 // --- Categories (cached) ---
 export async function getCategories() {
-  const params = getAuthParams();
+  const url = `${BASE_URL}/products/categories?per_page=100`;
 
-  const res = await fetch(`${BASE_URL}/products/categories?${params}`, {
-    next: { revalidate: 60 * 60 }, // cache for 1 hour
+  const data = await safeFetch(url, {
+    next: { revalidate: 60 * 60 },
   });
 
-  return res.json();
+  if (!Array.isArray(data)) {
+    console.error("Categories error:", data);
+    return [];
+  }
+
+  return data;
 }
 
 async function getCategoryIdFromSlug(slug: string) {
   const categories = await getCategories();
-
   const match = categories.find((cat: any) => cat.slug === slug);
-
   return match?.id;
 }
 
 // --- Products ---
 export async function getProducts(category?: string, search?: string) {
-  const params = getAuthParams();
+  const params = new URLSearchParams();
 
   if (category) {
     const categoryId = isNaN(Number(category))
@@ -44,29 +78,24 @@ export async function getProducts(category?: string, search?: string) {
     params.append("search", search);
   }
 
-  const res = await fetch(`${BASE_URL}/products?${params}`, {
+  const url = `${BASE_URL}/products?${params}`;
+
+  return safeFetch(url, {
     cache: "no-store",
   });
-
-  return res.json();
 }
 
 // --- Get ALL products (for search) ---
 export async function getAllProducts() {
-  const params = getAuthParams();
-  params.append("per_page", "50");
-
   let page = 1;
   let allProducts: any[] = [];
 
   while (true) {
-    params.set("page", String(page));
+    const url = `${BASE_URL}/products?per_page=50&page=${page}`;
 
-    const res = await fetch(`${BASE_URL}/products?${params}`, {
-      next: { revalidate: 60 * 5 }, // cache for 5 mins
+    const data = await safeFetch(url, {
+      next: { revalidate: 60 * 5 },
     });
-
-    const data = await res.json();
 
     if (!data.length) break;
 
@@ -84,4 +113,15 @@ export async function getAllProductsCached() {
 
   cachedProducts = await getAllProducts();
   return cachedProducts;
+}
+
+// --- Single Product ---
+export async function getProduct(slug: string) {
+  const url = `${BASE_URL}/products?slug=${slug}`;
+
+  const data = await safeFetch(url, {
+    cache: "no-store",
+  });
+
+  return data?.[0] || null;
 }
