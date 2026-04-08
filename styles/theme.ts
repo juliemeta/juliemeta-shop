@@ -49,7 +49,7 @@ export const theme = createTheme({
     },
     success: {
       main: "#2e7d32",
-      dark: "#000",
+      dark: "#28702c",
       light: "#fff",
     },
   },
@@ -63,6 +63,7 @@ export const theme = createTheme({
       lineHeight: 1.2,
       color: "#4800a7",
       textAlign: "center",
+      marginBottom: "25px",
     },
 
     h2: {

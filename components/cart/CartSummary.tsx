@@ -2,6 +2,7 @@
 import { useCartStore } from "@/lib/store/cartStore";
 import { CartCheckoutButton, CartSummaryWrapper } from "./CartSummary.styles";
 import { formatPrice } from "@/lib/utils/format";
+import { Typography } from "@mui/material";
 
 export default function CartSummary() {
   const { items, getTotal } = useCartStore();
@@ -21,12 +22,18 @@ export default function CartSummary() {
 
   return (
     <CartSummaryWrapper>
-      <h2>I alt</h2>
-      <h3>{itemCount} varer</h3>
-      <h3>Subtotal {formatPrice(total)}</h3>
-      <h3>Levering</h3>
+      <h3>
+        Du har {itemCount} {itemCount === 1 ? "vare" : "varer"} i kurven
+      </h3>
+      <Typography>
+        I alt (ekskl. levering) <strong>{formatPrice(total)}</strong>
+      </Typography>
       {items.length > 0 && (
-        <CartCheckoutButton onClick={handleCheckout}>
+        <CartCheckoutButton
+          onClick={handleCheckout}
+          variant="contained"
+          color="success"
+        >
           BETALING
         </CartCheckoutButton>
       )}

@@ -4,22 +4,17 @@ import CartSummary from "@/components/cart/CartSummary";
 import { useCartStore } from "@/lib/store/cartStore";
 import Image from "next/image";
 import Link from "next/link";
+import { CartPageContainer } from "./page.styles";
+import { Grid, Typography } from "@mui/material";
 
 export default function CartPage() {
   const { items, updateQty } = useCartStore();
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "2fr 1fr",
-        gap: "40px",
-        alignItems: "start",
-      }}
-    >
+    <CartPageContainer container>
       {/* 🛒 LEFT: CART ITEMS */}
-      <div>
-        <h1>Min indkøbskurv</h1>
+      <Grid size={{ xs: 12, md: 8 }}>
+        <Typography variant="h1">Min indkøbskurv</Typography>
 
         {items.length === 0 && <p>Din kurv er tom</p>}
 
@@ -100,10 +95,12 @@ export default function CartPage() {
             </div>
           </div>
         ))}
-      </div>
+      </Grid>
 
       {/* 💳 RIGHT: SUMMARY */}
-      <CartSummary />
-    </div>
+      <Grid size={{ xs: 12, md: 4 }}>
+        <CartSummary />
+      </Grid>
+    </CartPageContainer>
   );
 }

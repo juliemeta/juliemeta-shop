@@ -12,11 +12,10 @@ export const CartSummaryWrapper = styled(Grid)(({ theme }) => ({
 
 export const CartCheckoutButton = styled(Button)(({ theme }) => ({
   width: "100%",
+  margin: theme.spacing(2, 0, 0),
   padding: theme.spacing(2),
   borderRadius: 4,
   border: "none",
-  background: "black",
-  color: "white",
   cursor: "pointer",
   fontWeight: 600,
 }));
