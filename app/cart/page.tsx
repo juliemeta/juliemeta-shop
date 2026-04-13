@@ -4,44 +4,87 @@ import CartSummary from "@/components/cart/CartSummary";
 import { useCartStore } from "@/lib/store/cartStore";
 import Image from "next/image";
 import Link from "next/link";
+import UndoSnackbars from "@/components/cart/UndoSnackbars";
+import {
+  CartContent,
+  CartPageContainer,
+  CartWrapper,
+  SelectQuantityButton,
+  SelectQuantityWrapper,
+} from "./page.styles";
+import { Box, Grid, Typography } from "@mui/material";
 
 export default function CartPage() {
-  const { items, removeFromCart, updateQty } = useCartStore();
+  const { items, updateQty, removeFromCart } = useCartStore();
 
   return (
-    <>
-      <div>
-        <h1>Min indkøbskurv</h1>
+    <CartPageContainer container>
+      {/* 🛒 LEFT: CART ITEMS */}
+      <CartWrapper size={{ xs: 12, md: 8 }}>
+        <Typography variant="h1">Min indkøbskurv</Typography>
 
         {items.length === 0 && <p>Din kurv er tom</p>}
 
         {items.map((item) => (
-          <div
-            key={item.id}
-            style={{ display: "flex", gap: 16, marginBottom: 16 }}
-          >
+          <CartContent key={`${item.id}-${item.size}`}>
             {item.image && (
-              <Image src={item.image} alt={item.name} width={80} height={80} />
+              <Link href={`/shop/${item.slug}`}>
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={80}
+                  height={80}
+                  style={{ borderRadius: 4 }}
+                />
+              </Link>
             )}
 
-            <div>
+            <Box style={{ flex: 1 }}>
               <Link href={`/shop/${item.slug}`}>{item.name}</Link>
 
-              <div>{item.price} kr.</div>
+              <Typography>{item.price} kr.</Typography>
 
-              <input
-                type="number"
-                value={item.quantity}
-                min={1}
-                onChange={(e) => updateQty(item.id, Number(e.target.value))}
-              />
+              {item.size && (
+                <Typography style={{ fontSize: 14, opacity: 0.7 }}>
+                  Størrelse: {item.size}
+                </Typography>
+              )}
+              {/* Update quantity */}
+              <SelectQuantityWrapper>
+                <SelectQuantityButton
+                  onClick={() => {
+                    if (item.quantity === 1) {
+                      removeFromCart(item.id, item.size);
+                    } else {
+                      updateQty(item.id, item.quantity - 1, item.size);
+                    }
+                  }}
+                >
+                  -
+                </SelectQuantityButton>
 
-              <button onClick={() => removeFromCart(item.id)}>Fjern</button>
-            </div>
-          </div>
+                <Box>{item.quantity}</Box>
+
+                <SelectQuantityButton
+                  onClick={() =>
+                    updateQty(item.id, item.quantity + 1, item.size)
+                  }
+                >
+                  +
+                </SelectQuantityButton>
+              </SelectQuantityWrapper>
+            </Box>
+          </CartContent>
         ))}
-      </div>
-      <CartSummary />
-    </>
+      </CartWrapper>
+
+      {/* 💳 RIGHT: SUMMARY */}
+      <Grid size={{ xs: 12, md: 4 }}>
+        <CartSummary />
+      </Grid>
+
+      {/* 👇 SNACKBARS */}
+      <UndoSnackbars />
+    </CartPageContainer>
   );
 }

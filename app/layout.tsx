@@ -28,7 +28,7 @@ export default async function RootLayout({
         <ThemeRegistry>
           <Navbar categories={categories} />
 
-          <Box sx={{ background: "background.default" }}>
+          <Box sx={{ bgcolor: "background.default" }}>
             <Box
               sx={{
                 maxWidth: 1200,
