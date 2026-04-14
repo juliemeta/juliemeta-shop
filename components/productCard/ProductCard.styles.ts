@@ -10,6 +10,7 @@ export const StyledCard = styled(Card)(({ theme }) => ({
   cursor: "pointer",
   overflow: "hidden",
   boxShadow: "none",
+  border: `2px solid ${theme.palette.background.paper}`,
 
   "&:hover .hoverImage": {
     opacity: 1,
