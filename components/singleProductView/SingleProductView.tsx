@@ -11,7 +11,7 @@ import {
   TextField,
   Divider,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import placeholderImage from "../../public/assets/images/placeholder.png";
 import { useCartStore } from "@/lib/store/cartStore";
@@ -20,7 +20,69 @@ export function SingleProductView({ product }: any) {
   const [selectedImage, setSelectedImage] = useState(product.images?.[0]?.src);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState(0);
+
+  const [variations, setVariations] = useState<any[]>([]);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedVariation, setSelectedVariation] = useState<any>(null);
+
   const addToCart = useCartStore((state) => state.addToCart);
+
+  // 📦 Get sizes from attributes
+  const sizes = Array.from(
+    new Set(
+      variations.flatMap((v) => v.attributes.map((attr: any) => attr.option)),
+    ),
+  );
+
+  useEffect(() => {
+    console.log("SIZES:", sizes);
+  }, [sizes]);
+
+  // 🌐 Fetch variations
+  useEffect(() => {
+    if (product.type !== "variable") return;
+
+    fetch(`/api/variations?productId=${product.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("VARIATIONS:", data);
+        setVariations(data);
+      })
+      .catch(console.error);
+    console.log("SIZES:", sizes);
+  }, [product.id, product.type]);
+
+  // 🎯 Match selected size → variation
+  useEffect(() => {
+    if (!selectedSize || variations.length === 0) return;
+
+    console.log("selectedSize:", selectedSize);
+    console.log("variations:", variations);
+
+    const normalize = (str: string) =>
+      str.toLowerCase().replace(/\s/g, "").replace("×", "x");
+
+    const match = variations.find((v) =>
+      v.attributes.some(
+        (attr: any) => normalize(attr.option) === normalize(selectedSize),
+      ),
+    );
+
+    setSelectedVariation(match || null);
+  }, [selectedSize, variations]);
+
+  // 🚀 Auto-select first size
+  useEffect(() => {
+    if (sizes.length > 0 && !selectedSize) {
+      setSelectedSize(sizes[0]);
+    }
+  }, [sizes, selectedSize]);
+
+  useEffect(() => {
+    if (selectedVariation?.image?.src) {
+      setSelectedImage(selectedVariation.image.src);
+    }
+  }, [selectedVariation]);
 
   return (
     <Box sx={{ maxWidth: 1200, mx: "auto", p: 3 }}>
@@ -67,9 +129,45 @@ export function SingleProductView({ product }: any) {
             {product.name}
           </Typography>
 
+          {/* 💲 Price */}
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {product.price} kr.
+            {selectedVariation?.price || product.price} kr.
           </Typography>
+
+          {/* If out of stock 👜🚫 */}
+          {selectedVariation?.stock_status === "outofstock" && (
+            <Typography color="error" sx={{ mt: 1 }}>
+              Ikke på lager
+            </Typography>
+          )}
+
+          {/* 📏 Size selector */}
+          {sizes.length > 0 && (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle1">Størrelse</Typography>
+
+              <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+                {sizes.map((size: string) => {
+                  const isAvailable = variations.some(
+                    (v) =>
+                      v.attributes.some((attr: any) => attr.option === size) &&
+                      v.stock_status === "instock",
+                  );
+
+                  return (
+                    <Button
+                      key={size}
+                      variant={selectedSize === size ? "contained" : "outlined"}
+                      onClick={() => setSelectedSize(size)}
+                      disabled={!isAvailable}
+                    >
+                      {size}
+                    </Button>
+                  );
+                })}
+              </Box>
+            </Box>
+          )}
 
           <Typography sx={{ mt: 2, color: "text.secondary" }}>
             {product.short_description?.replace(/<[^>]+>/g, "")}
@@ -91,7 +189,7 @@ export function SingleProductView({ product }: any) {
             <IconButton onClick={() => setQty(qty + 1)}>+</IconButton>
           </Box>
 
-          {/* Add to cart */}
+          {/* 🛒 Add to cart */}
           <Button
             variant="contained"
             sx={{
@@ -100,21 +198,24 @@ export function SingleProductView({ product }: any) {
               "&:hover": { backgroundColor: "#b38cc9" },
             }}
             fullWidth
+            disabled={product.type === "variable" && !selectedVariation}
             onClick={() =>
               addToCart({
                 id: product.id,
+                variation_id: selectedVariation?.id,
                 name: product.name,
-                price: product.price,
+                price: selectedVariation?.price || product.price,
                 image: product.images?.[0]?.src,
                 quantity: qty,
                 slug: product.slug,
+                size: selectedSize,
               })
             }
           >
             Tilføj til kurv
           </Button>
 
-          {/* Payment (placeholder) */}
+          {/* Payment */}
           <Button variant="outlined" sx={{ mt: 2 }} fullWidth>
             Pay with GPay
           </Button>

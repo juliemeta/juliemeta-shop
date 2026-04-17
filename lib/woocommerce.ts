@@ -125,3 +125,19 @@ export async function getProduct(slug: string) {
 
   return data?.[0] || null;
 }
+
+// --- Variations ---
+export async function getProductVariations(productId: number) {
+  const url = `${BASE_URL}/products/${productId}/variations`;
+
+  const data = await safeFetch(url, {
+    cache: "no-store",
+  });
+
+  if (!Array.isArray(data)) {
+    console.error("Variations error:", data);
+    return [];
+  }
+
+  return data;
+}
