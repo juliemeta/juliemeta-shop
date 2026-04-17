@@ -26,7 +26,7 @@ export default function CartPage() {
         {items.length === 0 && <p>Din kurv er tom</p>}
 
         {items.map((item) => (
-          <CartContent key={`${item.id}-${item.size}`}>
+          <CartContent key={`${item.id}-${item.variation_id ?? "simple"}`}>
             {item.image && (
               <Link href={`/shop/${item.slug}`}>
                 <Image
@@ -54,9 +54,9 @@ export default function CartPage() {
                 <SelectQuantityButton
                   onClick={() => {
                     if (item.quantity === 1) {
-                      removeFromCart(item.id, item.size);
+                      removeFromCart(item.id, item.variation_id);
                     } else {
-                      updateQty(item.id, item.quantity - 1, item.size);
+                      updateQty(item.id, item.quantity - 1, item.variation_id);
                     }
                   }}
                 >
@@ -67,7 +67,7 @@ export default function CartPage() {
 
                 <SelectQuantityButton
                   onClick={() =>
-                    updateQty(item.id, item.quantity + 1, item.size)
+                    updateQty(item.id, item.quantity + 1, item.variation_id)
                   }
                 >
                   +
