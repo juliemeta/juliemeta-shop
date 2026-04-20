@@ -16,6 +16,7 @@ import Image from "next/image";
 import placeholderImage from "../../public/assets/images/placeholder.png";
 import { useCartStore } from "@/lib/store/cartStore";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { StyledContainer } from "@/styles/Container";
 
 export function SingleProductView({ product }: any) {
   const [selectedImage, setSelectedImage] = useState(product.images?.[0]?.src);
@@ -94,7 +95,7 @@ export function SingleProductView({ product }: any) {
       : product.stock_status === "instock";
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: "auto", p: 3 }}>
+    <StyledContainer>
       <Grid container spacing={4}>
         {/* LEFT: Images */}
         <Grid size={{ xs: 12, md: 6 }}>
@@ -167,6 +168,11 @@ export function SingleProductView({ product }: any) {
               </Typography>
             )}
 
+          {/* Product short description */}
+          <Typography sx={{ mt: 2, color: "text.secondary" }}>
+            {product.short_description?.replace(/<[^>]+>/g, "")}
+          </Typography>
+
           {/* 📏 Size selector */}
           {sizes.length > 0 && (
             <Box sx={{ mt: 3 }}>
@@ -227,10 +233,6 @@ export function SingleProductView({ product }: any) {
               )}
             </Box>
           )}
-
-          <Typography sx={{ mt: 2, color: "text.secondary" }}>
-            {product.short_description?.replace(/<[^>]+>/g, "")}
-          </Typography>
 
           {/* Quantity */}
           <Box sx={{ display: "flex", alignItems: "center", mt: 3 }}>
@@ -338,6 +340,6 @@ export function SingleProductView({ product }: any) {
           {tab === 2 && <Typography>Ingen anmeldelser endnu</Typography>}
         </Box>
       </Box>
-    </Box>
+    </StyledContainer>
   );
 }

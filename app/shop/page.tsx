@@ -1,5 +1,6 @@
 import ProductsView from "@/components/productsView/ProductsView";
 import { getProducts } from "@/lib/woocommerce";
+import { StyledContainer } from "@/styles/Container";
 
 export const dynamic = "force-dynamic";
 
