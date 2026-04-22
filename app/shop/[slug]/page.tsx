@@ -14,5 +14,9 @@ export default async function ProductPage({
     return <div>Produkt ikke fundet</div>;
   }
 
-  return <SingleProductView product={product} />;
+  return (
+    <>
+      <SingleProductView product={product} />
+    </>
+  );
 }

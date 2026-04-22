@@ -1,20 +1,13 @@
 "use client";
 
-import { Button, Typography } from "@mui/material";
-import { HeroContainer, HeroContent, HeroWrapper } from "./page.styles";
+import { Typography } from "@mui/material";
 import { StyledContainer } from "@/styles/Container";
+import FrontPageHero from "@/components/frontPageHero/FrontPageHero";
 
 export default function HomePage() {
   return (
     <>
-      <HeroContainer>
-        <HeroWrapper>
-          <HeroContent>
-            <Typography variant="h1">Hello from hero</Typography>
-            <Button>Learn more</Button>
-          </HeroContent>
-        </HeroWrapper>
-      </HeroContainer>
+      <FrontPageHero />
 
       <StyledContainer>
         <Typography variant="h1">Hello from Homepage</Typography>
