@@ -12,7 +12,9 @@ export default function FrontPageHero() {
         <HeroWrapper>
           <HeroContent>
             <Typography variant="h1">Festivalsæson</Typography>
-            <Button variant="contained">Se mere</Button>
+            <Button variant="contained" href="">
+              Se mere
+            </Button>
           </HeroContent>
         </HeroWrapper>
       </HeroContainer>

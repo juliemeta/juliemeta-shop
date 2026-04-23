@@ -4,15 +4,18 @@ import { Accordion, AccordionDetails } from "@mui/material";
 
 export const MegaMenuWrapper = styled(Box)({
   position: "relative",
+  display: "flex",
+  alignItems: "center",
 });
 
 export const MegaMenuDropdown = styled(Box)(({ theme }) => ({
   position: "absolute",
   top: "100%",
-  left: 0,
+  right: 0,
+  left: "auto",
 
-  width: "100%",
-  maxWidth: "600px",
+  width: 600,
+  maxWidth: "90vw",
 
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3],

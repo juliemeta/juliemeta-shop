@@ -90,7 +90,7 @@ export default function MegaMenu({ categories }: { categories: Category[] }) {
 
             <Box sx={{ mt: 2 }}>
               <StyledLink href="/shop" onClick={() => setMobileOpen(false)}>
-                <Typography fontWeight={600}>Se de nyeste varer 👉</Typography>
+                <Typography fontWeight={600}>👉 Se de nyeste varer</Typography>
               </StyledLink>
             </Box>
           </MobileMenuContainer>
@@ -116,7 +116,7 @@ export default function MegaMenu({ categories }: { categories: Category[] }) {
             <MegaMenuColumn key={parent.id}>
               <StyledLink href={`/shop/category/${parent.slug}`}>
                 <NavLinkTypography variant="subtitle2">
-                  {parent.name}
+                  <strong>{parent.name}</strong>
                 </NavLinkTypography>
               </StyledLink>
 
@@ -132,7 +132,7 @@ export default function MegaMenu({ categories }: { categories: Category[] }) {
           ))}
 
           <MegaMenuRow>
-            <StyledLink href="/shop">Se de nyeste varer 👉</StyledLink>
+            <StyledLink href="/shop">👉 Se de nyeste varer</StyledLink>
           </MegaMenuRow>
         </MegaMenuDropdown>
       )}
