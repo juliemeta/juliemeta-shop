@@ -60,8 +60,29 @@ async function getCategoryIdFromSlug(slug: string) {
   return match?.id;
 }
 
+//--- Tags ---
+export async function getTags() {
+  const url = `${BASE_URL}/products/tags?per_page=100`;
+
+  const data = await safeFetch(url, {
+    next: { revalidate: 60 * 60 },
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+async function getTagIdFromSlug(slug: string) {
+  const tags = await getTags();
+  const match = tags.find((t: any) => t.slug === slug);
+  return match?.id;
+}
+
 // --- Products ---
-export async function getProducts(category?: string, search?: string) {
+export async function getProducts(
+  category?: string,
+  search?: string,
+  tag?: string,
+) {
   const params = new URLSearchParams();
 
   if (category) {
@@ -77,6 +98,16 @@ export async function getProducts(category?: string, search?: string) {
   if (search) {
     params.append("search", search);
   }
+
+  if (tag) {
+    const tagId = isNaN(Number(tag)) ? await getTagIdFromSlug(tag) : tag;
+
+    if (tagId) {
+      params.append("tag", String(tagId));
+    }
+  }
+
+  params.append("per_page", "50");
 
   const url = `${BASE_URL}/products?${params}`;
 
