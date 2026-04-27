@@ -1,5 +1,5 @@
 import { getProduct } from "@/lib/woocommerce";
-import { SingleProductView } from "../../../components/singleProductView/SingleProductView";
+import { SingleProductView } from "../../../../components/singleProductView/SingleProductView";
 
 export default async function ProductPage({
   params,

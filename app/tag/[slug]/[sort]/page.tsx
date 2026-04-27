@@ -4,15 +4,21 @@ import ProductGrid from "@/components/productGrid/ProductGrid";
 import { getProducts, getTags } from "@/lib/woocommerce";
 import { StyledContainer } from "@/styles/Container";
 import { Typography } from "@mui/material";
-import SortSelect from "@/components/filters/SortSelect";
 
 export default async function TagPage({ params }: any) {
-  const { slug } = await params;
+  const { slug, sort } = await params;
+
+  console.log("CATEGORY SORT:", sort);
 
   const tags = await getTags();
   const currentTag = tags.find((t: any) => t.slug === slug);
 
-  const products = await getProducts(undefined, undefined, currentTag?.id);
+  const products = await getProducts(
+    undefined,
+    undefined,
+    currentTag?.id,
+    sort,
+  );
 
   return (
     <StyledContainer>

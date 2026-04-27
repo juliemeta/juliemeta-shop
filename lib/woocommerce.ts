@@ -11,7 +11,7 @@ function getAuthHeaders() {
   };
 }
 
-// 🛡️ Safe fetch (undgår HTML crash)
+// 🛡️ Safe fetch (no HTML crash)
 async function safeFetch(url: string, options: any = {}) {
   const res = await fetch(url, {
     ...options,
@@ -23,8 +23,8 @@ async function safeFetch(url: string, options: any = {}) {
 
   const text = await res.text();
 
-  // Debug (kan fjernes senere)
-  console.log("API RAW:", url, text);
+  // Debug (remove this later)
+  //console.log("API RAW:", url, text);
 
   if (!res.ok) {
     throw new Error("WooCommerce API fejl");
@@ -32,7 +32,7 @@ async function safeFetch(url: string, options: any = {}) {
 
   if (text.startsWith("<")) {
     console.error("FULL HTML RESPONSE:\n", text);
-    return []; // 🔥 midlertidigt så app ikke crasher
+    return []; // 🔥 temp for app not to crash
   }
 
   return JSON.parse(text);
@@ -82,8 +82,10 @@ export async function getProducts(
   category?: string,
   search?: string,
   tag?: string,
+  sort?: string,
 ) {
   const params = new URLSearchParams();
+  console.log("SORT PARAM:", sort);
 
   if (category) {
     const categoryId = isNaN(Number(category))
@@ -99,6 +101,7 @@ export async function getProducts(
     params.append("search", search);
   }
 
+  // --- tags
   if (tag) {
     const tagId = isNaN(Number(tag)) ? await getTagIdFromSlug(tag) : tag;
 
@@ -107,9 +110,27 @@ export async function getProducts(
     }
   }
 
+  // --- sorting
+  if (sort === "price-asc") {
+    params.append("orderby", "price");
+    params.append("order", "asc");
+  }
+
+  if (sort === "price-desc") {
+    params.append("orderby", "price");
+    params.append("order", "desc");
+  }
+
+  if (sort === "newest") {
+    params.append("orderby", "date");
+    params.append("order", "desc");
+  }
+
   params.append("per_page", "50");
 
   const url = `${BASE_URL}/products?${params}`;
+
+  console.log("FINAL URL:", url);
 
   return safeFetch(url, {
     cache: "no-store",
