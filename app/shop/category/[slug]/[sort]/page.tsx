@@ -1,10 +1,9 @@
 export const dynamic = "force-dynamic";
 
-import ProductGrid from "@/components/productGrid/ProductGrid";
 import { getProducts, getCategories } from "@/lib/woocommerce";
 import { StyledContainer } from "@/styles/Container";
 import { Typography } from "@mui/material";
-import SortSelect from "@/components/filters/SortSelect";
+import InfiniteProductGrid from "@/components/productGrid/InfiniteProductGrid";
 
 export default async function CategoryPage(props: any) {
   const params = await props.params;
@@ -30,7 +29,11 @@ export default async function CategoryPage(props: any) {
     <StyledContainer>
       <Typography variant="h1">{currentCategory?.name || slug}</Typography>
 
-      <ProductGrid products={products} />
+      <InfiniteProductGrid
+        initialProducts={products}
+        tagId={currentCategory?.id || null}
+        sort={sort || ""}
+      />
     </StyledContainer>
   );
 }

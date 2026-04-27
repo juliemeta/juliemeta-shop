@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import ProductGrid from "@/components/productGrid/ProductGrid";
+import InfiniteProductGrid from "@/components/productGrid/InfiniteProductGrid";
 import { getProducts, getTags } from "@/lib/woocommerce";
 import { StyledContainer } from "@/styles/Container";
 import { Typography } from "@mui/material";
@@ -25,7 +25,11 @@ export default async function TagPage({ params }: any) {
       <Typography variant="h3">Fokus på</Typography>
       <Typography variant="h1">{currentTag?.name || slug}</Typography>
 
-      <ProductGrid products={products} />
+      <InfiniteProductGrid
+        initialProducts={products}
+        tagId={currentTag?.id}
+        sort={sort}
+      />
     </StyledContainer>
   );
 }

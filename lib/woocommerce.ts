@@ -83,6 +83,7 @@ export async function getProducts(
   search?: string,
   tag?: string,
   sort?: string,
+  page: number = 1,
 ) {
   const params = new URLSearchParams();
   console.log("SORT PARAM:", sort);
@@ -127,6 +128,7 @@ export async function getProducts(
   }
 
   params.append("per_page", "50");
+  params.append("page", String(page));
 
   const url = `${BASE_URL}/products?${params}`;
 

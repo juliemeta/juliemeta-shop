@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Select, MenuItem } from "@mui/material";
 
 export default function SortSelect() {
@@ -24,7 +24,18 @@ export default function SortSelect() {
     "price-desc": "Pris: Høj → Lav",
   };
 
+  const router = useRouter();
+
   const handleChange = (value: string) => {
+    // 🔥 SPECIAL CASE: /shop
+    if (basePath === "/shop") {
+      if (value) {
+        router.push(`/shop?sort=${value}`);
+      } else {
+        router.push("/shop");
+      }
+      return;
+    }
     if (value) {
       window.location.assign(`${basePath}/${value}`);
     } else {
