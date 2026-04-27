@@ -3,9 +3,12 @@ import { getProducts } from "@/lib/woocommerce";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page() {
-  const products = await getProducts();
-  console.log("SHOP PRODUCTS:", products);
+export default async function Page({ searchParams }: any) {
+  const { sort = "" } = await searchParams;
+
+  const products = await getProducts(undefined, undefined, undefined, sort);
+
+  console.log("SHOP SORT:", sort);
 
   return <ProductsView products={products} />;
 }

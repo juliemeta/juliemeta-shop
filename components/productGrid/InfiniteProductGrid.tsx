@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import ProductGrid from "./ProductGrid";
+import { Typography } from "@mui/material";
+import { body } from "framer-motion/client";
 
 export default function InfiniteProductGrid({
-  products: initialProducts,
+  initialProducts,
   tagId,
   sort,
 }: any) {
@@ -12,6 +14,12 @@ export default function InfiniteProductGrid({
   const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    setProducts(initialProducts);
+    setPage(2);
+    setHasMore(true);
+  }, [initialProducts]);
 
   const loadMore = async () => {
     if (loading || !hasMore) return;
@@ -53,9 +61,18 @@ export default function InfiniteProductGrid({
     <>
       <ProductGrid products={products} />
 
-      {loading && <p>Loader...</p>}
+      {loading && <Typography>Loader...</Typography>}
 
-      {!hasMore && <p>Du har set alle produkter 🎉</p>}
+      {!hasMore && (
+        <Typography variant="h6">
+          <span
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            Hop til top
+          </span>
+        </Typography>
+      )}
     </>
   );
 }
