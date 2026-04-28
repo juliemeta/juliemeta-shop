@@ -1,3 +1,5 @@
+"use client";
+
 import { Typography, Button } from "@mui/material";
 import {
   HeroContainer,
