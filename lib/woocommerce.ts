@@ -11,7 +11,7 @@ function getAuthHeaders() {
   };
 }
 
-// 🛡️ Safe fetch (undgår HTML crash)
+// 🛡️ Safe fetch (no HTML crash)
 async function safeFetch(url: string, options: any = {}) {
   const res = await fetch(url, {
     ...options,
@@ -23,8 +23,8 @@ async function safeFetch(url: string, options: any = {}) {
 
   const text = await res.text();
 
-  // Debug (kan fjernes senere)
-  console.log("API RAW:", url, text);
+  // Debug (remove this later)
+  //console.log("API RAW:", url, text);
 
   if (!res.ok) {
     throw new Error("WooCommerce API fejl");
@@ -32,7 +32,7 @@ async function safeFetch(url: string, options: any = {}) {
 
   if (text.startsWith("<")) {
     console.error("FULL HTML RESPONSE:\n", text);
-    return []; // 🔥 midlertidigt så app ikke crasher
+    return []; // 🔥 temp for app not to crash
   }
 
   return JSON.parse(text);
@@ -60,8 +60,33 @@ async function getCategoryIdFromSlug(slug: string) {
   return match?.id;
 }
 
+//--- Tags ---
+export async function getTags() {
+  const url = `${BASE_URL}/products/tags?per_page=100`;
+
+  const data = await safeFetch(url, {
+    next: { revalidate: 60 * 60 },
+  });
+
+  return Array.isArray(data) ? data : [];
+}
+
+async function getTagIdFromSlug(slug: string) {
+  const tags = await getTags();
+  const match = tags.find((t: any) => t.slug === slug);
+  return match?.id;
+}
+
 // --- Products ---
-export async function getProducts(category?: string, search?: string) {
+export async function getProducts(
+  category?: string,
+  search?: string,
+  tag?: string,
+  sort?: string,
+  page: number = 1,
+  featured?: boolean,
+  perPage: number = 50,
+) {
   const params = new URLSearchParams();
 
   if (category) {
@@ -77,6 +102,43 @@ export async function getProducts(category?: string, search?: string) {
   if (search) {
     params.append("search", search);
   }
+
+  // --- product tags
+  if (tag) {
+    const tagId = isNaN(Number(tag)) ? await getTagIdFromSlug(tag) : tag;
+
+    if (tagId) {
+      params.append("tag", String(tagId));
+    }
+  }
+
+  // --- sort by
+  if (sort === "price-asc") {
+    params.append("orderby", "price");
+    params.append("order", "asc");
+  }
+
+  if (sort === "price-desc") {
+    params.append("orderby", "price");
+    params.append("order", "desc");
+  }
+
+  if (sort === "newest") {
+    params.append("orderby", "date");
+    params.append("order", "desc");
+  }
+
+  if (sort === "popular") {
+    params.append("orderby", "popularity");
+  }
+
+  // --- featured products
+  if (featured) {
+    params.append("featured", "true");
+  }
+
+  params.append("per_page", String(perPage));
+  params.append("page", String(page));
 
   const url = `${BASE_URL}/products?${params}`;
 

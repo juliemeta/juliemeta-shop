@@ -28,16 +28,13 @@ export default async function RootLayout({
         <ThemeRegistry>
           <Navbar categories={categories} />
 
-          <Box sx={{ bgcolor: "background.default" }}>
-            <Box
-              sx={{
-                maxWidth: 1200,
-                margin: "0 auto",
-                padding: 5,
-              }}
-            >
-              {children}
-            </Box>
+          <Box
+            sx={{
+              bgcolor: "background.default",
+              minHeight: "100vh",
+            }}
+          >
+            {children}
           </Box>
         </ThemeRegistry>
       </body>

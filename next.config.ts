@@ -1,9 +1,16 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   images: {
-    domains: ["juliemeta.dk"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "eudaimeta.dk",
+      },
+      {
+        protocol: "https",
+        hostname: "www.eudaimeta.dk",
+      },
+    ],
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

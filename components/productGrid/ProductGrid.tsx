@@ -13,11 +13,13 @@ type Product = {
 
 export default function ProductGrid({ products }: { products: Product[] }) {
   return (
-    <ProductGridContainer>
-      {Array.isArray(products) &&
-        products.map((product) => (
-          <ProductCard key={product.slug} product={product} />
-        ))}
-    </ProductGridContainer>
+    <>
+      <ProductGridContainer>
+        {Array.isArray(products) &&
+          products.map((product) => (
+            <ProductCard key={product.slug} product={product} />
+          ))}
+      </ProductGridContainer>
+    </>
   );
 }

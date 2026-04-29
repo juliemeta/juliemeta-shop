@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/woocommerce";
 import { SingleProductView } from "../../../components/singleProductView/SingleProductView";
 
@@ -8,10 +9,14 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
 
+  if (!slug || slug === "shop") {
+    return notFound();
+  }
+
   const product = await getProduct(slug);
 
   if (!product) {
-    return <div>Produkt ikke fundet</div>;
+    return notFound();
   }
 
   return <SingleProductView product={product} />;

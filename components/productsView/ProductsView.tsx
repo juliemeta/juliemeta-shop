@@ -1,16 +1,17 @@
 "use client";
 
 import Typography from "@mui/material/Typography";
-import ProductGrid from "../productGrid/ProductGrid";
+import { StyledContainer } from "@/styles/Container";
+import InfiniteProductGrid from "../productGrid/InfiniteProductGrid";
 
 export default function ProductsView({ products }: any) {
   return (
-    <>
+    <StyledContainer>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Products
+        Shop
       </Typography>
 
-      <ProductGrid products={products} />
-    </>
+      <InfiniteProductGrid initialProducts={products} />
+    </StyledContainer>
   );
 }

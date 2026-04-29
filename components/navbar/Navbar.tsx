@@ -7,7 +7,6 @@ import {
   StyledToolbar,
   NavLinks,
   StyledLink,
-  NavLinkTypography,
   CenterSection,
   LeftSection,
   RightSection,
@@ -51,6 +50,12 @@ export default function Navbar({ categories }: any) {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [cache, setCache] = useState<Record<string, any[]>>({});
   const [allProducts, setAllProducts] = useState<any[]>([]);
+
+  const handleSelect = () => {
+    setOpenResults(false);
+    setSearch("");
+    setActiveIndex(-1);
+  };
 
   const router = useRouter();
 
@@ -130,7 +135,7 @@ export default function Navbar({ categories }: any) {
     if (!search.trim()) return;
 
     router.push(`/products?search=${search}`);
-    setOpenResults(false);
+    handleSelect();
   };
 
   return (
@@ -145,14 +150,6 @@ export default function Navbar({ categories }: any) {
 
         {/* CENTER */}
         <CenterSection>
-          <NavLinks>
-            <MegaMenu categories={categories} />
-
-            <StyledLink href="/about">
-              <NavLinkTypography>Om os</NavLinkTypography>
-            </StyledLink>
-          </NavLinks>
-
           <div style={{ position: "relative" }}>
             <form onSubmit={handleSearch}>
               <input
@@ -188,7 +185,7 @@ export default function Navbar({ categories }: any) {
                           : `/shop/category/${item.slug}`;
 
                       router.push(url);
-                      setOpenResults(false);
+                      handleSelect();
                     }
                   }
                 }}
@@ -199,12 +196,13 @@ export default function Navbar({ categories }: any) {
                   borderRadius: "8px",
                   border: "1px solid #ccc",
                   outline: "none",
-                  width: "250px",
+                  width: "100%",
+                  maxWidth: "250px",
                 }}
               />
             </form>
 
-            {/* DROPDOWN */}
+            {/* SEARCH DROPDOWN */}
             {openResults && (
               <div
                 style={{
@@ -230,6 +228,7 @@ export default function Navbar({ categories }: any) {
                     key={item.id}
                     onMouseDown={(e) => e.preventDefault()}
                     onMouseEnter={() => setActiveIndex(index)}
+                    onClick={handleSelect}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -244,6 +243,7 @@ export default function Navbar({ categories }: any) {
                     {item.type === "product" ? (
                       <StyledLink
                         href={`/shop/${item.slug}`}
+                        onClick={handleSelect}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -275,7 +275,10 @@ export default function Navbar({ categories }: any) {
                         </div>
                       </StyledLink>
                     ) : (
-                      <StyledLink href={`/shop/category/${item.slug}`}>
+                      <StyledLink
+                        href={`/shop/category/${item.slug}`}
+                        onClick={handleSelect}
+                      >
                         Vis kategori: "{highlight(item.name, search)}"
                       </StyledLink>
                     )}
@@ -290,7 +293,10 @@ export default function Navbar({ categories }: any) {
                       fontWeight: 500,
                     }}
                   >
-                    <StyledLink href={`/products?search=${search}`}>
+                    <StyledLink
+                      href={`/products?search=${search}`}
+                      onClick={handleSelect}
+                    >
                       Se alle søgeresultater →
                     </StyledLink>
                   </div>
@@ -309,6 +315,9 @@ export default function Navbar({ categories }: any) {
               </CartBadge>
             </CartButton>
           </Link>
+          <NavLinks>
+            <MegaMenu categories={categories} />
+          </NavLinks>
         </RightSection>
       </StyledToolbar>
     </StyledAppBar>
