@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import { Box } from "@mui/material";
 import { getCategories } from "@/lib/woocommerce";
 import ThemeRegistry from "./themeRegistry";
+import Footer from "@/components/footer/Footer";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -26,15 +27,18 @@ export default async function RootLayout({
     <html lang="da">
       <body className={`${inter.variable} ${playfair.variable}`}>
         <ThemeRegistry>
-          <Navbar categories={categories} />
-
           <Box
             sx={{
-              bgcolor: "background.default",
+              display: "flex",
+              flexDirection: "column",
               minHeight: "100vh",
             }}
           >
-            {children}
+            <Navbar categories={categories} />
+
+            <Box sx={{ flex: 1 }}>{children}</Box>
+
+            <Footer />
           </Box>
         </ThemeRegistry>
       </body>
