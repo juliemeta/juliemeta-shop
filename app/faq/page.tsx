@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Accordion,
   AccordionDetails,
@@ -12,6 +10,19 @@ import { StyledContainer } from "@/styles/StyledContainer";
 import { StyledTextWrapper } from "@/styles/StyledTextWrapper";
 import Link from "next/link";
 import BannerSection from "@/components/banner/BannerSection";
+import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamicBreadcrumbs";
+import { Metadata } from "next";
+
+// 🎯 SEO
+const pageTitle = "FAQ";
+
+const pageDescription =
+  "Her finder du svar på de mest almindelige spørgsmål om levering, returnering og vores Print on Demand-koncept.";
+
+export const metadata: Metadata = {
+  title: `${pageTitle} | Eudaimeta`,
+  description: pageDescription,
+};
 
 export default function Faq() {
   return (
@@ -23,6 +34,14 @@ export default function Faq() {
       />
       <StyledContainer>
         <StyledTextWrapper>
+          <DynamicBreadcrumbs
+            items={[
+              { label: "Forside", href: "/" },
+              {
+                label: pageTitle,
+              },
+            ]}
+          />
           <Typography variant="h1" gutterBottom>
             FAQ
           </Typography>

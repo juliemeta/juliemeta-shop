@@ -3,6 +3,19 @@ import { StyledContainer } from "@/styles/StyledContainer";
 import { StyledTextWrapper } from "@/styles/StyledTextWrapper";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
+import { Metadata } from "next";
+import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamicBreadcrumbs";
+
+// 🎯 SEO
+const pageTitle = "Om os";
+
+const pageDescription =
+  "Vi producerer ikke varer på forhånd. Det betyder, at vi undgår overproduktion og unødvendigt spild. På den måde er hvert produkt skabt specifikt til dig - mindre forbrug, mere omtanke. 💚";
+
+export const metadata: Metadata = {
+  title: `${pageTitle} | Eudaimeta`,
+  description: pageDescription,
+};
 
 export default function about() {
   return (
@@ -14,7 +27,15 @@ export default function about() {
       />
       <StyledContainer>
         <StyledTextWrapper>
-          <Typography variant="h1">Om os</Typography>
+          <DynamicBreadcrumbs
+            items={[
+              { label: "Forside", href: "/" },
+              {
+                label: pageTitle,
+              },
+            ]}
+          />
+          <Typography variant="h1">{pageTitle}</Typography>
           <Typography>
             Eudaimeta er skabt ud fra et ønske om at gøre op med overforbrug
             uden at gå på kompromis med æstetik og kreativitet. Inspirationen

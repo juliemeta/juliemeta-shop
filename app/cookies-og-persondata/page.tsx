@@ -1,16 +1,34 @@
-"use client";
-
 import { Box, List, ListItem, Typography } from "@mui/material";
-
 import { StyledContainer } from "@/styles/StyledContainer";
 import { StyledTextWrapper } from "@/styles/StyledTextWrapper";
 import Link from "next/link";
+import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamicBreadcrumbs";
+import { Metadata } from "next";
+
+// 🎯 SEO
+const pageTitle = "Cookies og persondata";
+
+const pageDescription =
+  "Læs hvordan Eudaimeta behandler cookies og personoplysninger.";
+
+export const metadata: Metadata = {
+  title: `${pageTitle} | Eudaimeta`,
+  description: pageDescription,
+};
 
 export default function CookiesOgPersondata() {
   return (
     <StyledContainer>
       <StyledTextWrapper>
-        <Typography variant="h1">Cookies og persondata</Typography>
+        <DynamicBreadcrumbs
+          items={[
+            { label: "Forside", href: "/" },
+            {
+              label: pageTitle,
+            },
+          ]}
+        />
+        <Typography variant="h1">{pageTitle}</Typography>
         <Typography variant="body2" sx={{ textAlign: "center" }}>
           Sidst opdateret maj 2026
         </Typography>

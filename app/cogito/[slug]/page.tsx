@@ -1,3 +1,4 @@
+import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamicBreadcrumbs";
 import { StyledContainer } from "@/styles/StyledContainer";
 import { StyledTextWrapper } from "@/styles/StyledTextWrapper";
 import { Box, Button, Divider, Typography } from "@mui/material";
@@ -48,6 +49,23 @@ export default async function PostPage({
   return (
     <StyledContainer>
       <StyledTextWrapper>
+        <DynamicBreadcrumbs
+          items={[
+            {
+              label: "Forside",
+              href: "/",
+            },
+
+            {
+              label: "Cogito meta sum",
+              href: "/cogito",
+            },
+
+            {
+              label: post.title.rendered,
+            },
+          ]}
+        />
         <Typography variant="h1">{post.title.rendered}</Typography>
 
         <Box

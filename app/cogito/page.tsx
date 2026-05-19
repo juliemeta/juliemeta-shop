@@ -1,4 +1,5 @@
 import BannerSection from "@/components/banner/BannerSection";
+import { DynamicBreadcrumbs } from "@/components/breadcrumbs/dynamicBreadcrumbs";
 import { StyledContainer } from "@/styles/StyledContainer";
 import { StyledTextWrapper } from "@/styles/StyledTextWrapper";
 import { Button } from "@mui/material";
@@ -24,9 +25,17 @@ export default async function CogitoPage() {
       />
       <StyledContainer>
         <StyledTextWrapper>
+          <DynamicBreadcrumbs
+            items={[
+              { label: "Forside", href: "/" },
+              {
+                label: "Cogito meta sum",
+              },
+            ]}
+          />
           {posts.map((post: any) => (
             <article key={post.id} style={{ marginBottom: "4rem" }}>
-              <Link href={`/cogito-meta-sum/${post.slug}`}>
+              <Link href={`/cogito/${post.slug}`}>
                 <h2
                   style={{
                     fontSize: "2rem",
